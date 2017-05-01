@@ -5,6 +5,7 @@
  */
 
 import React, { Component } from 'react';
+import { GoogleSignin, GoogleSigninButton } from 'react-native-google-signin';
 import {
   AppRegistry,
   StyleSheet,
@@ -12,42 +13,40 @@ import {
   View
 } from 'react-native';
 
-export default class firstapp extends Component {
+
+export default class accounting extends Component {
+
+
+  constructor(props) {
+    super(props);
+    GoogleSignin.hasPlayServices({ autoResolve: true }).then(() => {
+      GoogleSignin.configure({}).then(() => {
+        GoogleSignin.currentUserAsync().then((user)=>{
+          console.log('User', user);
+        }).done();
+      });
+    }).catch((error) => {
+      console.log('Play services error', error.code, error.message);
+    });
+  }
+  _signIn(param) {
+    GoogleSignin.signIn().then((user)=>{
+      console.log(user);
+    }).catch((err)=>{
+      console.log('WRONG SING IN', err);
+    }).done();
+  }
+
+
   render() {
     return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>
-          Welcome to React Native Amine!
-        </Text>
-        <Text style={styles.instructions}>
-          To get started, edit index.android.js
-        </Text>
-        <Text style={styles.instructions}>
-          Double tap R on your keyboard to reload,{'\n'}
-          Shake or press menu button for dev menu
-        </Text>
-      </View>
+      <GoogleSigninButton
+        style={{ width: 48, height: 48 }}
+        size={GoogleSigninButton.Size.Icon}
+        color={GoogleSigninButton.Color.Dark}
+        onPress={this._signIn.bind(this)} />
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#F5FCFF',
-  },
-  welcome: {
-    fontSize: 20,
-    textAlign: 'center',
-    margin: 10,
-  },
-  instructions: {
-    textAlign: 'center',
-    color: '#333333',
-    marginBottom: 5,
-  },
-});
-
-AppRegistry.registerComponent('firstapp', () => firstapp);
+AppRegistry.registerComponent('accounting', () => firstapp);
